@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +16,7 @@ namespace Recognizer
 		 */
 		public static double[,] MedianFilter(double[,] original)
 		{
-		    return original.Select((m, i, j) => m.ApplyFilter(i, j));
+		    return original.Select((o, i, j) => o.ApplyFilter(i, j));
 		}
 
 	    private static double ApplyFilter(this double[,] original, int x, int y)

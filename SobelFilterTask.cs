@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace Recognizer
 {
@@ -46,8 +45,8 @@ namespace Recognizer
 
         private static double[,] Normalize(this double[,] matrix)
         {
-            var min = matrix.Cast<double>().Min();
-            var max = matrix.Cast<double>().Max();
+            var min = matrix.ToIEnumerable().Min();
+            var max = matrix.ToIEnumerable().Max();
             return matrix.Select(x => (x - min)/(max - min));
         }
 
@@ -58,17 +57,16 @@ namespace Recognizer
 
         private static double Convolute(this double[,] matrix, double[,] kernel)
         {
-            return matrix.Zip(kernel, (x, y) => x*y).Sum();
+            return matrix
+                .Zip(kernel, (x, y) => x*y)
+                .ToIEnumerable()
+                .Aggregate((x, y) => x + y);
         }
 
         private static double[,] GetNeighborhood(this double[,] matrix, int x, int y, int size)
         {
-            var result = new double[size, size];
             var r = (size - 1)/2;
-            for (var i = -r; i <= r; i++)
-                for (var j = -r; j <= r; j++)
-                    result[i + r, j + r] = matrix[x + i, y + j];
-            return result;
+            return matrix.TakeBlock(x - r, x + r, y - r, y + r);
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace Recognizer
 {
-	public static class ThresholdFilterTask
+    public static class ThresholdFilterTask
 	{
 		/* 
 		 * Замените пиксели ярче порогового значения T на белый (1.0),
@@ -24,7 +22,8 @@ namespace Recognizer
 
 	    public static double FindT(double[,] original, double threshold)
 	    {
-	        var target = (int)Math.Ceiling(original.Cast<double>().Count() * threshold);
+	        var n = original.ToIEnumerable().Count();
+	        var target = (int)(n * threshold);
 	        var t = 0d;
 	        while (CheckT(original, t) > target)
 	            t += 0.01;
@@ -33,7 +32,7 @@ namespace Recognizer
 
 	    private static double CheckT(double[,] original, double t)
 	    {
-	        return original.Cast<double>().Count(x => x > t);
+	        return original.ToIEnumerable().Count(x => x >= t);
 	    }
     }
 }
